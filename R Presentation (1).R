@@ -1,4 +1,4 @@
-Jon Bieniek
+
 
 install.packages("tidyverse")
 NH.Data <- read.csv("C:\\Users\\BieniekJon\\Desktop\\R\\NH_cleaned.csv")
@@ -404,8 +404,6 @@ multiplot(p, q, r, s)
 multiplot(t, u, v, w)
 
 
-Jessica Hammond 
-
 #This code separated the stop date into three categories.  FALSE is to keep source column
 mydates<- tidyr::separate(tblnhcleaned,stop_date, c("year", "month", "day"),remove=FALSE)
 mydates
@@ -458,7 +456,7 @@ zSep<- zSep+ ggtitle("Stop Outcomes Rockingham County Sep")
 zSep
 
 
-Jared fortier
+
 
 # library(RCurl)
 # library(xlsx)
