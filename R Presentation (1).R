@@ -4,6 +4,8 @@ install.packages("tidyverse")
 NH.Data <- read.csv("C:\\Users\\BieniekJon\\Desktop\\R\\NH_cleaned.csv")
 Weather.data<- read.csv("C:\\Users\\BieniekJon\\Desktop\\R\\weather.csv")
 
+
+##Comparing weather and number of traffic stops
 library(dplyr)
 library(Hmisc)
 library(tidyr)
@@ -12,15 +14,17 @@ library(stringr)
 library(ggplot2)
 library(plotly)
 
-# creates tibble trables
+# tidy the data
 nh.data <- tbl_df(NH.Data)
 
 nh.data$num_stops<- mutate(nh.data,num_stops = 1) 
 
+##Group stops by day
 Stops <- nh.data%>%
   group_by(stop_date)%>%``
   summarise(n=n())
 
+##Import weather condition data from weather.gov
 Weather.select <-select(Weather.data, DATE, PRCP,TMAX, SNOW)
 
 weather.next <- Weather.select %>%
@@ -28,9 +32,9 @@ weather.next <- Weather.select %>%
   summarise(PRCP1 = max(PRCP, na.rm = TRUE), TMAX1 = max(TMAX, na.rm = TRUE), SNOW1 = max(SNOW, na.rm = TRUE))
 
 Stops <- rename(Stops, DATE= Date)
-
+##Join weather and stops data
 joined <- left_join(weather.next, Stops, by="DATE")
-
+##plot 
 ggplot(joined, aes(x = PRCP1, y = n))+
   xlim(0,4) +
   ylim(0,12000) +
@@ -60,7 +64,7 @@ ggplot(joined, aes(x = TMAX1, y = n))+
   geom_bar(stat = 'identity', fill="palevioletred")
 
 
-Manoj Virigineni
+## looking at Gender and Violations
 
 getwd()
 library(dplyr)
@@ -404,20 +408,20 @@ multiplot(p, q, r, s)
 multiplot(t, u, v, w)
 
 
-#This code separated the stop date into three categories.  FALSE is to keep source column
+##Traffic Violation Quotas in Rockingham County???
 mydates<- tidyr::separate(tblnhcleaned,stop_date, c("year", "month", "day"),remove=FALSE)
-mydates
-class(mydates$stop_time)
-as.numeric()
+
+
 mydates%>%
   group_by(county_name)%>%
   select(year:day, stop_outcome)
-mydates
+
 mycounties<-select(mydates,one_of(c("county_name", "stop_date","year", "month", "day", "stop_outcome")))
 RockinghamMonths<-filter(mycounties,county_name=="Rockingham County" & (stop_outcome=="Ticket"| stop_outcome=="Warning"))
-#Create a vector listin the number of days in the month for each month of the year
+#Create a vector listing the number of days in the month for each month of the year
 monthDays<-c(31,28,31,30,31,30,31,31,30,31,30,31)
-#Create 3 separate tables for months ending in 28, 30, and 31 days
+
+#Create 3 separate tables for months ending in 28, 30, and 31 days (to compare months with equal number of days)
 RockinghamMonth30<-filter(mycounties,county_name=="Rockingham County" & (stop_outcome=="Ticket"| stop_outcome=="Warning") & monthDays[as.numeric(month)]==30)
 RockinghamMonth31<-filter(mycounties,county_name=="Rockingham County" & (stop_outcome=="Ticket"| stop_outcome=="Warning") & monthDays[as.numeric(month)]==31)
 RockinghamMonth28<-filter(mycounties,county_name=="Rockingham County" & (stop_outcome=="Ticket"| stop_outcome=="Warning") & monthDays[as.numeric(month)]==28)
